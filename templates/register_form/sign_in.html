@@ -1,0 +1,19 @@
+{% extends 'register_form/base.html' %}
+{% block register %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.user_name }}
+        </div>
+        <div class="form-group">
+            {{ form.password }}
+        </div>
+        <div class="form-group">
+            <input id="feedback-submit" type="submit" class="button1" value="Sign in">
+            <a href="sign_up" class="submit-link">Sign up</a>
+        </div>
+        {% if error %}
+            <h3 class="label_error">{{ error }}</h3>
+        {% endif %}
+    </form>
+{% endblock register %}

@@ -1,0 +1,54 @@
+{% extends 'home_page/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center py-4">
+            <div class="col col-4">
+                <img class="win-book" src="{{ book.image.url }}" alt="">
+            </div>
+            <div class="col col-8">
+                <div>
+                    <h1 class="shrift">{{ book.name }} ,{{ book.total_rating }}</h1>
+                    <h1>Total price: {{ book.total_price }}</h1>
+                </div>
+                <div>
+                    {% for author in book.author.all %}
+                        <a href="#">{{ author }}</a>
+                    {% endfor %}
+                </div>
+                <div>
+                    <p class="description">
+                        {{ book.description }}
+                    </p>
+                </div>
+                <div class="row justify-content-md-center py-4">
+                    <h1>Comments</h1>
+                </div>
+                {% for comment in comments %}
+                    <div class="col-12 bg-warning">
+                        <div>
+                            <h2 style="font-size: medium">{{ comment.subscriber }}, rating:{{ comment.rating }}</h2>
+                        </div>
+                        <div class="ml-2">
+                            <p>{{ comment.description }}</p>
+                        </div>
+                    </div>
+                    <hr width="100%" size="5" color="wheat">
+                {% endfor %}
+                <div class="row justify-content-md-center py-4">
+                    <form action="{% url 'select_books' id_book=book.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group  ">
+                            {{ form.comment }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label">Rating: </label>
+                            {{ form.rating }}
+                            <input type="submit" class="col-6 btn btn-primary btn-lg ml-3 " value="Send">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,131 @@
+jQuery( function ( $ ) {
+
+  var $currentForm = null;
+  var $formLogin = $('form#login');
+  var $formRegister =  $('form#register');
+  var $modal = $('#navbarLogin');
+  var $signupTab = $modal.find('#navbarLogin-signup');
+  var $signupTabPill = $modal.find('[href="#navbarLogin-signup"]');
+  var $singinTab = $modal.find('#navbarLogin-login');
+  var $signinTabPill = $modal.find('[href="#navbarLogin-login"]');
+
+  $formRegister.validate({
+    rules: {
+      password2: {
+        equalTo: '#signonpassword'
+      }
+    }
+  });
+  $formLogin.validate();
+
+  $formLogin.on( 'submit', onSubmit );
+  $formRegister.on( 'submit', onSubmit );
+
+  function onSubmit(e) {
+
+    e.preventDefault();
+
+    $currentForm = $(this);
+
+    if ( ! $currentForm.valid() ) return false;
+
+    if ( $currentForm.is( $formRegister ) ) {
+
+      register();
+    } else {
+
+      login();
+    }
+  }
+
+  function register(e) {
+
+    showStatus(ajax_auth_object.loadingmessage);
+
+    var payload = {
+      action: 'ajaxregister',
+      name: $('#signonname').val(),
+      username: $('#signonusername').val(),
+      password: $('#signonpassword').val(),
+      email: $('#email').val(),
+      security: $('#signonsecurity').val()
+    };
+    doSubmit(payload);
+  }
+
+  function login(e) {
+
+    showStatus(ajax_auth_object.loadingmessage);
+
+    var payload = {
+      action: 'ajaxlogin',
+      username: $('#username').val(),
+      password: $('#password').val(),
+      email: '',
+      security: $('#security').val(),
+      name: ''
+    };
+    doSubmit(payload);
+  }
+
+  function doSubmit(data) {
+
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: ajax_auth_object.ajaxurl,
+      data: data
+    }).done( function ( response ) {
+
+      showStatus(response.message);
+
+      if (response.loggedin === true) {
+
+        if ($currentForm.is( $formRegister )) {
+
+          window.open('/user/' + data.username.replace(/[&.+?;]/g, '-'), '_blank');
+        }
+        location.reload();
+      }
+    }).fail(console.error);
+  }
+
+  function showStatus(text) {
+
+    $currentForm.find('p.status').show().text(text);
+  }
+
+  $('.auth-modal-toggle[data-auth-modal-tab]').on('click', function (e) {
+
+    var targetTab = $(this).attr('data-auth-modal-tab');
+    if (targetTab === 'sign-in') {
+
+      activateSignInTab();
+    } else if (targetTab === 'sign-up') {
+
+      activateSignUpTab();
+    }
+
+    $modal.modal();
+  });
+
+  $modal.on('hidden.bs.modal', activateSignUpTab);
+
+  function activateSignUpTab() {
+
+    $singinTab.removeClass('in show active');
+    $signinTabPill.removeClass('active show');
+
+    $signupTab.addClass('in show active');
+    $signupTabPill.addClass('active show');
+  }
+
+  function activateSignInTab() {
+
+      $signupTab.removeClass('in show active');
+      $signupTabPill.removeClass('active show');
+
+      $singinTab.addClass('in show active');
+      $signinTabPill.addClass('active show');
+  }
+});
