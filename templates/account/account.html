@@ -1,0 +1,75 @@
+{% extends 'home_page/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center py-4">
+            <div class="col-4">
+                <div class="row justify-content-md-center py-4">
+                    <h1>My Account</h1>
+                </div>
+                <div>
+                    <h1 style="font-size: 20pt">User name: {{ user.user_name }}</h1>
+                </div>
+                <div>
+                    <h1 style="font-size: large">Email: {{ user.email }}</h1>
+                </div>
+                <div>
+                    <h1 style="font-size: large">Personal discount: {{ user.discount }}</h1>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row justify-content-md-center py-4">
+                    <h1>Basket</h1>
+                </div>
+                <form action="{% url 'account' %}" method="post" enctype="multipart/form-data">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Author</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Total Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% csrf_token %}
+                        {% for order in orders %}
+                            {% if order.status.is_active  %}
+                                <tr>
+                                    <div class="form-check">
+                                        <th scope="row">
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       value="{{ order.book.name }}" id="{{ order.book.name }}"
+                                                       name="book">
+                                                {{ order.book.name }}
+                                                <label class=" form-check-label" for="{{ order.book.name }}"></label>
+                                            </div>
+                                        </th>
+                                        <td>{{ order.book.year }} </td>
+                                        <td>{{ order.book.price }}</td>
+                                        <td>{{ order.book.discount }}</td>
+                                        <td>{{ order.book.total_price }}</td>
+                                    </div>
+                                </tr>
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="row justify-content-md-center py-4">
+                        <input type="submit" class="col-4 btn btn-primary btn-lg mx-4" value="To order books"
+                               id="order" name="order">
+                        <input type="submit" class="col-4 btn btn-primary btn-danger mx-4" value="Delete books"
+                               id="delete" name="delete">
+                    </div>
+                    <div class="row justify-content-md-center py-4">
+                        <h3 class="text-danger" style="font-size: medium">{{ error }}</h3>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

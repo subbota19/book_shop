@@ -1,0 +1,71 @@
+{% extends 'home_page/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center py-4">
+            <div class="col col-3">
+                <img class="win-book" src="{{ author.image.url }}" alt="">
+            </div>
+            <div class="col col-9">
+                <div>
+                    <h1 class="shrift">{{ author.name }} </h1>
+                </div>
+                <div>
+                    <p class="description">
+                        {{ author.description }}
+                    </p>
+                </div>
+                <div class="row justify-content-md-center">
+                    {% for book in books %}
+                        <div class="col col-4">
+                            <div class="product-item">
+                                <div>
+                                    {% if book.discount != 0 %}
+                                        <h1 class="sale">{% widthratio book.discount 1 100 %}%</h1>
+                                    {% endif %}
+                                    <h1 class="book-rating">{{ book.total_rating }}</h1>
+                                    <a href="{% url 'select_books' id_book=book.id %}"><img class="win-image"
+                                                                                            src="{{ book.image.url }}"
+                                                                                            alt=""></a>
+                                </div>
+                                <div class="mx-4 my-2">
+                                    <h1 class="book-name">{{ book.name }}</h1>
+                                </div>
+                                <div>
+                                    {% for author in book.author.all %}
+                                        <div class="mx-4 my-2">
+                                            <h1 class="author-name">{{ author }}</h1>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if book.discount != 0 %}
+                                    <div>
+                                        <h1 class="book-price-line">{{ book.price }}$</h1>
+                                        <h1 class="book-new-price">{{ book.total_price }}$</h1>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <h1 class="book-price">{{ book.price }}$</h1>
+                                    </div>
+                                {% endif %}
+                                <div class="row justify-content-md-center">
+                                    {% if book.quantity %}
+
+                                        <button id="add-book" class="btn btn-primary my-2" type="submit"
+                                                data-book="{{ book }}">Add
+                                        </button>
+                                    {% else %}
+                                        <button id="add-book" class="btn btn-primary my-2 disabled" type="submit"
+                                                data-book="{{ book }}">Add
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
