@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from subbota_traning import settings
 from django.conf.urls.static import static
-from subscriber.views import redirect_register
+from register.views import redirect_register
 
 urlpatterns = [
     path('', redirect_register),
     path('admin/', admin.site.urls),
-    path('register/', include('subscriber.urls')),
-    path('home/', include('book.urls'))
+    path('register/', include('register.urls')),
+    path('account', include('subscriber.urls')),
+    path('home/', include('book.urls')),
+    path('author/', include('author.urls'))
 ]
 
 if settings.DEBUG:

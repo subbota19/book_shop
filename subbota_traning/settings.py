@@ -24,7 +24,7 @@ SECRET_KEY = '698z5(klh^kenp-n52^jrgx^-*yqfs!!_ch)9qxn4ej=s#%+ll'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.8']
 
 # Application definition
 
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'order',
     'author',
     'static',
-    'online_users'
+    'online_users',
+    'register'
 ]
 
 STATICFILES_DIRS = [
