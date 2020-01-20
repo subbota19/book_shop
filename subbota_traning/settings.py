@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'author',
     'static',
     'online_users',
-    'register'
+    'register',
+    'services'
 ]
 
 STATICFILES_DIRS = [

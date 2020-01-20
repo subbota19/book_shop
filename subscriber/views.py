@@ -1,37 +1,15 @@
-from django.shortcuts import render, redirect
-from subscriber.models import Subscribers
-from order.models import Orders, Status
+from django.shortcuts import render
+
+from services.subscriber.logic import *
 
 
 def account(request):
-    user = Subscribers.objects.all().get(user_name=request.session['user'])
-    orders = Orders.objects.all().filter(subscriber=user)
-    status = Status.objects.all().get(title='Выполнен')
-    error = ''
+    dict_with_date = logic_account(request.session['user'])
     if request.method == 'POST':
         if request.POST.get('order'):
-
-            for book in request.POST.getlist('book'):
-                first_orders = Orders.objects.all().filter(subscriber=user, book__name=book)
-                for successful_order in first_orders:
-
-                    if successful_order.status.is_active:
-
-                        if successful_order.subscriber.cache >= successful_order.book.price:
-                            error = 'The operation was a success'
-                            user.all_buys += successful_order.book.total_price
-
-                            user.cache -= (successful_order.book.total_price -
-                                           successful_order.book.total_price * float(user.discount))
-                            successful_order.status = status
-                            successful_order.save()
-                            user.save()
-                        else:
-                            error = "You don't have enough money for trading transactions in the account"
-                            break
-
+            dict_with_date['error'] = logic_account_order_book(request.POST, dict_with_date['user'],
+                                                               dict_with_date['status'], dict_with_date['error'])
         if request.POST.get('delete'):
-            for book in request.POST.getlist('book'):
-                Orders.objects.all().filter(subscriber=user, book__name=book)[0].delete()
+            logic_account_delete_book(request.POST, dict_with_date['user'])
 
-    return render(request, 'account/account.html', {'user': user, 'orders': orders, 'error': error})
+    return render(request, 'account/account.html', dict_with_date)
