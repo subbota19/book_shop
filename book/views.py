@@ -7,10 +7,6 @@ from django.db.models import Func
 import json
 
 
-class RoundNumber(Func, ABC):
-    function = 'ROUND'
-    template = '%(function)s(%(expressions)s, 0)'
-
 
 @csrf_exempt
 def order_books(request):
